@@ -10,6 +10,9 @@ class TodoList {
 }
 
 
+let $todoUL = document.querySelector(`.todo ul`)
+
+
 /**
  * One todo list item
  * Keeps track of it's own state (text, done, etc)
@@ -18,6 +21,8 @@ class TodoList {
 class TodoItem {
 	constructor(text) {
 
+
+		// $todoUL.appendChild( ... )
 	}
 }
 

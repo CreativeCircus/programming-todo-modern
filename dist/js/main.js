@@ -11,14 +11,18 @@ var TodoList = function TodoList() {
   _classCallCheck(this, TodoList);
 };
 
+var $todoUL = document.querySelector(".todo ul");
+
 /**
  * One todo list item
  * Keeps track of it's own state (text, done, etc)
  * Updates it's own internal DOM as needed
  */
 
-
 var TodoItem = function TodoItem(text) {
+
+  // $todoUL.appendChild( ... )
+
   _classCallCheck(this, TodoItem);
 };
 
