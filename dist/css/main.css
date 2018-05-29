@@ -124,6 +124,7 @@ body {
 	order: 100;
 	padding: 10px 20px;
 	opacity: 0.5;
+	text-decoration: line-through;
 }
 
 .todo > p {

@@ -1,3 +1,8 @@
+/**
+ * The master todo list controller
+ * Keeps all the items in an array, and updates the DOM as needed
+ * 
+ */
 class TodoList {
 	constructor() {
 		
@@ -5,7 +10,11 @@ class TodoList {
 }
 
 
-
+/**
+ * One todo list item
+ * Keeps track of it's own state (text, done, etc)
+ * Updates it's own internal DOM as needed
+ */
 class TodoItem {
 	constructor(text) {
 
