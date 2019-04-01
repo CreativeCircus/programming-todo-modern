@@ -92,7 +92,7 @@ body {
 	padding: 20px;
 }
 
-.todo input {
+.todo input[name="new-item"] {
 	font-size: 1.2em;
 	font-style: italic;
 	padding: 5px 20px;
@@ -102,8 +102,10 @@ body {
 
 .todo ul {
 	padding: 10px 0;
+	display: -webkit-flex;
 	display: flex;
-	flex-direction: column;
+	-webkit-flex-direction: column;
+	        flex-direction: column;
 }
 
 .todo ul li {
@@ -121,16 +123,30 @@ body {
 
 .todo ul li.done {
 	font-size: 0.75em;
-	order: 100;
+	-webkit-order: 100;
+	        order: 100;
 	padding: 10px 20px;
 	opacity: 0.5;
 	text-decoration: line-through;
 }
 
-.todo > p {
-	font-size: 0.66em;
+.todo footer {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-justify-content: space-between;
+	        justify-content: space-between;
 	padding: 5px 20px;
+}
+
+.todo footer p {
+	font-size: 0.66em;
 	color: #aaa;
+}
+
+.todo footer label {
+	font-size: 0.66em;
+	color: #aaa;
+	float: right;
 }
 
 /*# sourceMappingURL=main.css.map */
