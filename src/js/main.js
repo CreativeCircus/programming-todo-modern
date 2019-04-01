@@ -21,6 +21,7 @@ class TodoList {
 			this.render()
 		})
 
+		// listen for change events coming from the child TodoItems
 		window.addEventListener('itemchanged', this.render.bind(this))
 		this.render()
 	}
@@ -28,7 +29,6 @@ class TodoList {
 	// the render function handles putting the items in the DOM. 
 	// everything inside each item is handled by its own render function
 	render() {
-		console.log('TodoList::render()')
 		this.items.forEach((item) => {
 			if (item.done && !this.showCompleted) {
 				item.$element.remove()
@@ -40,6 +40,7 @@ class TodoList {
 		this.$doneCounter.innerText = this.items.filter((item) => item.done).length;
 	}
 }
+
 
 
 
@@ -68,10 +69,10 @@ class TodoItem {
 		window.dispatchEvent(new Event('itemchanged'))
 	}
 
+	// the render function handles the DOM representation of this item's data.
 	render() {
 		this.$doneButton.innerText = this.done ? 'Undo' : 'Done';
 		this.$element.className = this.done ? 'done' : '';
-		this.$p.innerText = this.text;
 	}
 }
 

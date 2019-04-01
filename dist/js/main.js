@@ -31,6 +31,7 @@ var TodoList = function () {
 			_this.render();
 		});
 
+		// listen for change events coming from the child TodoItems
 		window.addEventListener('itemchanged', this.render.bind(this));
 		this.render();
 	}
@@ -44,7 +45,6 @@ var TodoList = function () {
 		value: function render() {
 			var _this2 = this;
 
-			console.log('TodoList::render()');
 			this.items.forEach(function (item) {
 				if (item.done && !_this2.showCompleted) {
 					item.$element.remove();
@@ -88,12 +88,14 @@ var TodoItem = function () {
 			this.render();
 			window.dispatchEvent(new Event('itemchanged'));
 		}
+
+		// the render function handles the DOM representation of this item's data.
+
 	}, {
 		key: 'render',
 		value: function render() {
 			this.$doneButton.innerText = this.done ? 'Undo' : 'Done';
 			this.$element.className = this.done ? 'done' : '';
-			this.$p.innerText = this.text;
 		}
 	}]);
 
