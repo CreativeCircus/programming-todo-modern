@@ -1,106 +1,96 @@
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+"use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TodoList = function () {
-	function TodoList() {
-		var _this = this;
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-		_classCallCheck(this, TodoList);
+var TodoList = function TodoList() {
+  var _this = this;
 
-		this.items = [];
-		this.showCompleted = true;
+  _classCallCheck(this, TodoList);
 
-		this.$todoListUL = document.querySelector('.todo ul');
-		this.$doneCounter = document.querySelector('.todo .done');
-		this.$totalCounter = document.querySelector('.todo .total');
+  _defineProperty(this, "render", function () {
+    _this.items.forEach(function (item) {
+      if (item.done && !_this.showCompleted) {
+        item.$element.remove();
+      } else {
+        _this.$todoListUL.appendChild(item.$element);
+      }
+    });
 
-		var $newItemElement = document.querySelector('[name="new-item"]');
-		$newItemElement.addEventListener('keyup', function (event) {
-			if (event.key !== 'Enter') return false;
-			_this.items.push(new TodoItem(event.currentTarget.value));
-			event.currentTarget.value = '';
-			_this.render();
-		});
+    _this.$totalCounter.innerText = _this.items.length;
+    _this.$doneCounter.innerText = _this.items.filter(function (item) {
+      return item.done;
+    }).length;
+  });
 
-		var $showCompletedCheckbox = document.querySelector('[name="show-completed"]');
-		$showCompletedCheckbox.addEventListener('change', function (e) {
-			_this.showCompleted = $showCompletedCheckbox.checked;
-			_this.render();
-		});
+  this.items = [];
+  this.showCompleted = true;
+  this.$todoListUL = document.querySelector('.todo ul');
+  this.$doneCounter = document.querySelector('.todo .done');
+  this.$totalCounter = document.querySelector('.todo .total');
+  var $newItemElement = document.querySelector('[name="new-item"]');
+  $newItemElement.addEventListener('keyup', function (event) {
+    if (event.key !== 'Enter') return false;
+    var newItem = new TodoItem(event.currentTarget.value); // CALLBACK technique for inter-component communication (react style)
+    // let newItem = new TodoItem(event.currentTarget.value, this.render)
 
-		// listen for change events coming from the child TodoItems
-		window.addEventListener('itemchanged', this.render.bind(this));
-		this.render();
-	}
+    _this.items.push(newItem);
 
-	// the render function handles putting the items in the DOM. 
-	// everything inside each item is handled by its own render function
+    event.currentTarget.value = '';
+
+    _this.render();
+  });
+  var $showCompletedCheckbox = document.querySelector('[name="show-completed"]');
+  $showCompletedCheckbox.addEventListener('change', function (e) {
+    _this.showCompleted = $showCompletedCheckbox.checked;
+
+    _this.render();
+  }); // EVENT technique for inter-component communication (vue style)
+  // listen for change events coming from the child TodoItems
+
+  window.addEventListener('itemchanged', this.render);
+} // the render function handles putting the items in the DOM (or not). 
+// everything inside each item is handled by its own render function
+;
+
+var TodoItem = function TodoItem(text
+/*, parentRenderCallback*/
+) {
+  var _this2 = this;
+
+  _classCallCheck(this, TodoItem);
+
+  _defineProperty(this, "toggleDone", function () {
+    _this2.done = !_this2.done;
+
+    _this2.render(); // EVENT technique for inter-component communication (vue style)
+    // dispatch and event so that parent component can know when this child component changed, so it needs to update	
 
 
-	_createClass(TodoList, [{
-		key: 'render',
-		value: function render() {
-			var _this2 = this;
+    window.dispatchEvent(new Event('itemchanged')); // CALLBACK technique for inter-component communication (react style)
+    // something changed in this component, and the parent component needs to know it, so we call the provided "callback" function
+    // this.parentRenderCallback()
+  });
 
-			this.items.forEach(function (item) {
-				if (item.done && !_this2.showCompleted) {
-					item.$element.remove();
-				} else {
-					_this2.$todoListUL.appendChild(item.$element);
-				}
-			});
-			this.$totalCounter.innerText = this.items.length;
-			this.$doneCounter.innerText = this.items.filter(function (item) {
-				return item.done;
-			}).length;
-		}
-	}]);
+  _defineProperty(this, "render", function () {
+    _this2.$doneButton.innerText = _this2.done ? 'Undo' : 'Done';
+    _this2.$element.className = _this2.done ? 'done' : '';
+  });
 
-	return TodoList;
-}();
+  this.text = text;
+  this.done = false; // CALLBACK technique for inter-component communication (react style)
+  // this.parentRenderCallback = parentRenderCallback;
 
-var TodoItem = function () {
-	function TodoItem(text) {
-		_classCallCheck(this, TodoItem);
-
-		this.text = text;
-		this.done = false;
-
-		this.$element = document.createElement('li');
-
-		this.$p = document.createElement('p');
-		this.$p.innerText = this.text;
-		this.$element.appendChild(this.$p);
-
-		this.$doneButton = document.createElement('button');
-		this.$doneButton.innerText = 'Done';
-		this.$element.appendChild(this.$doneButton);
-		this.$doneButton.addEventListener('click', this.toggleDone.bind(this));
-	}
-
-	_createClass(TodoItem, [{
-		key: 'toggleDone',
-		value: function toggleDone() {
-			this.done = !this.done;
-			this.render();
-			window.dispatchEvent(new Event('itemchanged'));
-		}
-
-		// the render function handles the DOM representation of this item's data.
-
-	}, {
-		key: 'render',
-		value: function render() {
-			this.$doneButton.innerText = this.done ? 'Undo' : 'Done';
-			this.$element.className = this.done ? 'done' : '';
-		}
-	}]);
-
-	return TodoItem;
-}();
+  this.$element = document.createElement('li');
+  this.$p = document.createElement('p');
+  this.$p.innerText = this.text;
+  this.$element.appendChild(this.$p);
+  this.$doneButton = document.createElement('button');
+  this.$doneButton.innerText = 'Done';
+  this.$element.appendChild(this.$doneButton);
+  this.$doneButton.addEventListener('click', this.toggleDone);
+};
 
 var todoList = new TodoList();
 //# sourceMappingURL=main.js.map
