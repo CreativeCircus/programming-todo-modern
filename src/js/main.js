@@ -2,7 +2,7 @@ class TodoList {
 	constructor() {
 	}
 
-	render() {
+	render = () => {
 	}
 }
 
@@ -12,7 +12,7 @@ class TodoItem {
 	constructor(text) {
 	}
 
-	render() {
+	render = () => {
 	}
 }
 
